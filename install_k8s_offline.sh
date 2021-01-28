@@ -22,7 +22,7 @@ function install_docker_offline
   cat package/daemon.json >/etc/docker/daemon.json
   cat package/docker.service >/etc/systemd/system/docker.service
   /usr/sbin/setenforce 0
-  systemctl daemon-reload && systemctl restart docker
+  systemctl daemon-reload && systemctl restart docker && systemctl enable docker
 
   is_docker_running='false'
   for (( i=0;i<10;i++ ))
@@ -63,9 +63,14 @@ docker_exec=$(which docker || echo "/opt/kube/bin/docker")
 echo "导入ansible docker 镜像"
 ${docker_exec} load -i image/ansible_docker_image.tar.gz
 
-echo '解压ansible.tar.gz'
-tar -xvzf ansible.tar.gz
+if [ ! -d 'ansible' ]
+then
+  echo '解压ansible.tar.gz'
+  tar -xvzf ansible.tar.gz
+else
+  echo "检测到ansible 目录，跳过解压.."
+fi
 
 echo "启动ansible 容器"
 /usr/sbin/setenforce 0
-${docker_exec} run -it -d --rm -e LC_ALL='en_US.UTF-8'  -v `pwd`/ansible:/etc/ansible --name trs_ansible trs_ansible:latest  bash
+${docker_exec} run -it -d  -e LC_ALL='en_US.UTF-8'  -v `pwd`/ansible:/etc/ansible --name trs_ansible trs_ansible:latest  bash
