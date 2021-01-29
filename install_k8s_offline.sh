@@ -73,4 +73,8 @@ fi
 
 echo "启动ansible 容器"
 /usr/sbin/setenforce 0
+
+mkdir kubeconfig
+mkdir kube
+
 ${docker_exec} run -it -d  -e LC_ALL='en_US.UTF-8'  -v `pwd`/ansible:/etc/ansible --name trs_ansible trs_ansible:latest  bash
