@@ -77,4 +77,4 @@ echo "启动ansible 容器"
 mkdir kubeconfig
 mkdir kube
 
-${docker_exec} run -it -d  -e LC_ALL='en_US.UTF-8'  -v `pwd`/ansible:/etc/ansible -v `pwd`/kubeconfig:/root/.kube -v `pwd`/kube:/opt/kube --name trs_ansible trs_ansible:latest  bash
+${docker_exec} run -it --privileged=true -d  -e LC_ALL='en_US.UTF-8'  -v `pwd`/ansible:/etc/ansible -v `pwd`/kubeconfig:/root/.kube -v `pwd`/kube:/opt/kube --name trs_ansible trs_ansible:latest  bash
